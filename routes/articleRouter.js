@@ -24,32 +24,33 @@ function routes(Article) {
                 return res.json(articles);
         });
     })
-
+    articleRouter.use('/articles/:articleId', (req, res, next) => {
+        Article.findById(req.params.articleId, (err, article) => {
+            if(err) {
+                return res.send(err);   
+            }
+            if(article){
+                req.article = article
+                return next();
+            }
+            return res.sendStatus(404);
+        });
+    })
     articleRouter.route('/articles/:articleId')
-    .get((req, res) => {
-        Article.findById(req.params.articleId, (err, article) => {
-            if(err) {
-                return res.send(err);   
-            }
-                return res.json(article);
-        });
-    })
+    .get((req, res) => res.json(req.article))
     .put((req, res) => {
-        Article.findById(req.params.articleId, (err, article) => {
-            if(err) {
-                return res.send(err);   
-            }
-                article.textAboveHeadline = (req.body.textAboveHeadline != "") ? req.body.textAboveHeadline : article.textAboveHeadline;
-                article.headline = (req.body.headline != "") ? req.body.headline : article.headline;
-                article.description = (req.body.description != "") ? req.body.description : article.description;
-                article.author = (req.body.author != "") ? req.body.author : article.author;
-                article.type = (req.body.type != "") ? req.body.type : article.type;
-                article.readTime = (req.body.readTime != "") ? req.body.readTime : article.readTime;
-                //console.log(article)
-                article.save();
-                return res.json(article);
-        });
-    })
+        const {article} = req;
+        article.textAboveHeadline = (req.body.textAboveHeadline != "") ? req.body.textAboveHeadline : article.textAboveHeadline;
+        article.headline = (req.body.headline != "") ? req.body.headline : article.headline;
+        article.description = (req.body.description != "") ? req.body.description : article.description;
+        article.author = (req.body.author != "") ? req.body.author : article.author;
+        article.type = (req.body.type != "") ? req.body.type : article.type;
+        article.readTime = (req.body.readTime != "") ? req.body.readTime : article.readTime;
+        //console.log(article)
+        article.save();
+        return res.json(article);
+    });
+
     return articleRouter;
 }
 
