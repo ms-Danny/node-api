@@ -70,6 +70,14 @@ function routes(Article) {
             }
             return res.json(article);
         });
+    })
+    .delete((req, res) =>{
+        req.article.remove((err) => {
+            if(err) {
+                return res.send(err);
+            }
+            return res.sendStatus(204);
+        })
     });
 
     return articleRouter;
