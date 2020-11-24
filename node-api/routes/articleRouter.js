@@ -34,6 +34,22 @@ function routes(Article) {
                 return res.json(article);
         });
     })
+    .put((req, res) => {
+        Article.findById(req.params.articleId, (err, article) => {
+            if(err) {
+                return res.send(err);   
+            }
+                article.textAboveHeadline = (req.body.textAboveHeadline != "") ? req.body.textAboveHeadline : article.textAboveHeadline;
+                article.headline = (req.body.headline != "") ? req.body.headline : article.headline;
+                article.description = (req.body.description != "") ? req.body.description : article.description;
+                article.author = (req.body.author != "") ? req.body.author : article.author;
+                article.type = (req.body.type != "") ? req.body.type : article.type;
+                article.readTime = (req.body.readTime != "") ? req.body.readTime : article.readTime;
+                //console.log(article)
+                article.save();
+                return res.json(article);
+        });
+    })
     return articleRouter;
 }
 
