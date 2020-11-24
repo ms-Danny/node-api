@@ -47,8 +47,29 @@ function routes(Article) {
         article.type = (req.body.type != "") ? req.body.type : article.type;
         article.readTime = (req.body.readTime != "") ? req.body.readTime : article.readTime;
         //console.log(article)
-        article.save();
-        return res.json(article);
+        req.article.save((err) => {
+            if(err){
+                return res.send(err);
+            }
+            return res.json(article);
+        });
+    })
+    .patch((req, res) => {
+        const {article} = req;
+        if(req.body._id) {
+            delete req.body._id;
+        }
+        Object.entries(req.body).forEach((item) => {
+            const key = item[0];
+            const value = item[1];
+            article[key] = value;
+        });
+        req.article.save((err) => {
+            if(err){
+                return res.send(err);
+            }
+            return res.json(article);
+        });
     });
 
     return articleRouter;
