@@ -1,0 +1,3 @@
+To import article data into your mongoDB database.
+makesure mongoDB is running then
+run 'mongo articlesdb < articlesJson.js' from the command line
